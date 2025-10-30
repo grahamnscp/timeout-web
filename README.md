@@ -30,7 +30,7 @@ Serving HTTP on port :8080
 
 Default ingress-nginx timeout on rke2 kubernetes is 60s
 ```
-curl http://mydnsname.example.com/61
+curl http://mydnshost.example.com/61
 <html>
 <head><title>504 Gateway Time-out</title></head>
 <body>
