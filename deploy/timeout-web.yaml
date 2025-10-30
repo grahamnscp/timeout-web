@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: timeout-web
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: timeout-web
+  template:
+    metadata:
+      labels:
+        app: timeout-web
+    spec:
+      containers:
+        - name: timeout-web
+          image: grahamh/timeout-web:1.0
+          imagePullPolicy: Always
+          ports:
+          - containerPort: 8080
+            name: web
+            protocol: TCP
+          readinessProbe:
+            httpGet:
+              port: web
+              path: /
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: timeout-web-service
+  namespace: default
+spec:
+  type: ClusterIP
+  ports:
+  - name: web
+    port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: timeout-web
+  sessionAffinity: None
+---
+apiVersion: v1
+items:
+- apiVersion: networking.k8s.io/v1
+  kind: Ingress
+  metadata:
+    name: timeout-web-ingress
+    namespace: default
+    annotations:
+      kubernetes.io/ingress.class: nginx
+      #nginx.ingress.kubernetes.io/proxy-connect-timeout: "300"
+      #nginx.ingress.kubernetes.io/proxy-read-timeout: "300"
+      #nginx.ingress.kubernetes.io/proxy-send-timeout: "300"
+  spec:
+    ingressClassName: nginx
+    rules:
+    - host: mydnshost.example.com
+      http:
+        paths:
+        - backend:
+            service:
+              name: timeout-web-service
+              port:
+                number: 80
+          path: /
+          pathType: Prefix
+    tls:
