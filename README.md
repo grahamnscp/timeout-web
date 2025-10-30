@@ -16,7 +16,7 @@ docker run -d --rm -p 8080:8080 grahamh/timeout-web:1.0
 Start a local container instance to test:
 ```
 # test run output (client)
-curl http://gdesktop.glocal.lab:8080/5
+curl http://localhost:8080/5
 [10-30-2025 10:35:20.62 timeout-web] Host: 21830b6e054e, Recieved Request: gdesktop.glocal.lab:8080/5
 [10-30-2025 10:35:25.62 timeout-web] Slept for: 5s
 
@@ -28,9 +28,9 @@ Serving HTTP on port :8080
 [10-30-2025 10:35:25.62 timeout-web] done. Slept for: 5s
 ```
 
-Default timeout on rke2 is 60s
+Default ingress-nginx timeout on rke2 kubernetes is 60s
 ```
-curl http://gvllm.buildsi.com/61
+curl http://mydnsname.example.com/61
 <html>
 <head><title>504 Gateway Time-out</title></head>
 <body>
