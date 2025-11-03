@@ -30,8 +30,8 @@ func main() {
 func Handler(w http.ResponseWriter, r *http.Request) {
 
   dt := time.Now()
-  fmt.Printf("[%s timeout-web] Host: %s, Request: %s%s\n", dt.Format("01-02-2006 15:04:05.00"), 
-              hostname, r.Host, r.URL.Path) 
+  fmt.Printf("[%s timeout-web] Host: %s, Client: %s, Request: %s%s\n", dt.Format("01-02-2006 15:04:05.00"), 
+              hostname, r.RemoteAddr, r.Host, r.URL.Path) 
 
   reqHostname := r.Host
   reqURI := strings.Trim(r.URL.Path, "/")
@@ -41,11 +41,13 @@ func Handler(w http.ResponseWriter, r *http.Request) {
   }
   reqSleep, err := strconv.Atoi(reqURI)
   if err != nil {
-    fmt.Printf("Requested sleep duration URL: '%s' is not a number, defaulting to: %ds\n", reqURI, reqSleep)
+    fmt.Printf("[%s timeout-web] Host: %s, Client: %s requested sleep duration URL: '%s' is not a number, defaulting to: %ds\n", 
+                dt.Format("01-02-2006 15:04:05.00"), hostname, r.RemoteAddr, reqURI, reqSleep)
     fmt.Fprintf(w,"[%s timeout-web] Please enter a valid sleep duration as URI, '/%s' is not valid.\n",
                    dt.Format("01-02-2006 15:04:05.00"), reqURI)
   } else {
-    fmt.Printf("[%s timeout-web] Sleeping for %ds..\n", dt.Format("01-02-2006 15:04:05.00"), reqSleep)
+    fmt.Printf("[%s timeout-web] Host: %s, Client: %s, sleeping for %ds..\n", dt.Format("01-02-2006 15:04:05.00"), 
+                hostname, r.RemoteAddr, reqSleep)
 
     // sleep
     time.Sleep(time.Duration(reqSleep)*time.Second)
@@ -54,8 +56,9 @@ func Handler(w http.ResponseWriter, r *http.Request) {
                    dt.Format("01-02-2006 15:04:05.00"), hostname, reqHostname, reqURI)
   }
   dt = time.Now()
-  fmt.Printf("[%s timeout-web] done. Slept for: %ds\n", dt.Format("01-02-2006 15:04:05.00"), reqSleep)
-  fmt.Fprintf(w,"[%s timeout-web] Slept for: %ds\n", dt.Format("01-02-2006 15:04:05.00"), reqSleep)
+  fmt.Printf("[%s timeout-web] Host: %s, Client: %s done. Slept for: %ds\n", dt.Format("01-02-2006 15:04:05.00"),
+              hostname, r.RemoteAddr, reqSleep)
+  fmt.Fprintf(w,"[%s timeout-web] Host: %s, slept for: %ds\n", dt.Format("01-02-2006 15:04:05.00"), hostname, reqSleep)
 }
 
 func healthHandler(w http.ResponseWriter, r *http.Request) {
@@ -65,8 +68,8 @@ func healthHandler(w http.ResponseWriter, r *http.Request) {
 
 func pingHandler(w http.ResponseWriter, r *http.Request) {
   dt := time.Now()
-  fmt.Printf("[%s timeout-web] Host: %s, Request: %s%s\n", dt.Format("01-02-2006 15:04:05.00"), 
-              hostname, r.Host, r.URL.Path) 
+  fmt.Printf("[%s timeout-web] Host: %s, Client: %s, Request: %s%s\n", dt.Format("01-02-2006 15:04:05.00"), 
+              hostname, r.RemoteAddr, r.Host, r.URL.Path) 
   fmt.Fprintf(w,"ack\n")
   return
 }
