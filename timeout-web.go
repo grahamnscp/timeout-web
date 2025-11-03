@@ -16,6 +16,8 @@ func main() {
     fmt.Println("io.hostname error: ", oserr, " hostname value:", hostname)
   }
   http.HandleFunc("/", Handler)
+  http.HandleFunc("/health", healthHandler)
+  http.HandleFunc("/ping", pingHandler)
   http.HandleFunc("/favicon.ico", nullHandler)
   fmt.Println("Serving HTTP on port :8080") 
 
@@ -56,6 +58,20 @@ func Handler(w http.ResponseWriter, r *http.Request) {
   fmt.Fprintf(w,"[%s timeout-web] Slept for: %ds\n", dt.Format("01-02-2006 15:04:05.00"), reqSleep)
 }
 
+func healthHandler(w http.ResponseWriter, r *http.Request) {
+  fmt.Fprintf(w,"ok\n")
+  return
+}
+
+func pingHandler(w http.ResponseWriter, r *http.Request) {
+  dt := time.Now()
+  fmt.Printf("[%s timeout-web] Host: %s, Request: %s%s\n", dt.Format("01-02-2006 15:04:05.00"), 
+              hostname, r.Host, r.URL.Path) 
+  fmt.Fprintf(w,"ack\n")
+  return
+}
+
 func nullHandler(w http.ResponseWriter, r *http.Request) {
   return
 }
+

@@ -24,7 +24,7 @@ spec:
           readinessProbe:
             httpGet:
               port: web
-              path: /
+              path: /health
 ---
 apiVersion: v1
 kind: Service
