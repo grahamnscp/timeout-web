@@ -4,7 +4,7 @@ Build the image:
 ```
 # build image and push:
 #  M1 macos
-docker buildx build --push -t grahamh/timeout-web:1.0-arch64
+docker buildx build --push -t grahamh/timeout-web:1.0-arch64 .
 docker run -d --rm -p 8080:8080 grahamh/timeout-web:1.0-arch64
 
 #  linux
